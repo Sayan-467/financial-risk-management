@@ -1,0 +1,86 @@
+{
+  "projects": [
+    {
+      "id": "PROJ-001",
+      "name": "Cloud Migration Alpha",
+      "status": "In Progress",
+      "budget": 500000,
+      "spent": 450000,
+      "timeline_days": 180,
+      "days_elapsed": 170,
+      "completed_tasks": 85,
+      "total_tasks": 100,
+      "resource_utilization": 0.95,
+      "payment_delays_days": 15,
+      "recent_logs": [
+        "Database migration stalled due to network latency.",
+        "Key developer on sick leave."
+      ],
+      "market_context": "Tech sector experiencing supply chain delays for server hardware."
+    },
+    {
+      "id": "PROJ-002",
+      "name": "E-Commerce Replatforming",
+      "status": "On Track",
+      "budget": 200000,
+      "spent": 50000,
+      "timeline_days": 120,
+      "days_elapsed": 30,
+      "completed_tasks": 25,
+      "total_tasks": 100,
+      "resource_utilization": 0.75,
+      "payment_delays_days": 0,
+      "recent_logs": [
+        "Initial design phase completed ahead of schedule.",
+        "Client approved wireframes."
+      ],
+      "market_context": "Retail e-commerce growing steadily."
+    },
+    {
+      "id": "PROJ-003",
+      "name": "AI CRM Integration",
+      "status": "At Risk",
+      "budget": 300000,
+      "spent": 320000,
+      "timeline_days": 90,
+      "days_elapsed": 85,
+      "completed_tasks": 60,
+      "total_tasks": 100,
+      "resource_utilization": 0.99,
+      "payment_delays_days": 45,
+      "recent_logs": [
+        "API rate limits exceeded on legacy CRM.",
+        "Client dispute over scope of data migration."
+      ],
+      "market_context": "Economic downturn causing clients to tighten budgets."
+    }
+  ],
+  "historical_risks": [
+    {
+      "id": "RISK-101",
+      "project_type": "Data Migration",
+      "description": "Network latency caused data corruption and 2 week delay.",
+      "mitigation": "Implemented chunked uploads with checksum validation.",
+      "severity": "High"
+    },
+    {
+      "id": "RISK-102",
+      "project_type": "API Integration",
+      "description": "Exceeded third-party API rate limits.",
+      "mitigation": "Implemented exponential backoff and caching layer.",
+      "severity": "Medium"
+    }
+  ],
+  "market_news": [
+    {
+      "title": "Supply Chain Issues Impact Server Delivery",
+      "content": "Global semiconductor shortages are causing delays in physical server deployments across the tech sector.",
+      "sentiment": "Negative"
+    },
+    {
+      "title": "Retail Spending Up",
+      "content": "E-commerce platforms are seeing increased traffic ahead of the holiday season.",
+      "sentiment": "Positive"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+fastapi>=0.109.2
+uvicorn>=0.27.1
+pydantic>=2.11.0
+
+# CrewAI modern stack (1.x requires langchain>=0.2)
+crewai>=1.0.0
+
+# LangChain 0.3.x stack (compatible with langchain-core 0.3)
+langchain>=0.3.0
+langchain-community>=0.3.0
+langchain-groq>=0.1.0
+litellm>=1.40.0
+
+# Vector DB
+chromadb>=0.4.24
+
+# ML/NLP
+sentence-transformers>=2.5.1
+scikit-learn>=1.4.1
+pandas>=2.2.0
+numpy>=1.26.4
+
+# Frontend
+streamlit>=1.31.1
+plotly>=5.19.0
+
+# Utilities
+python-dotenv>=1.0.0
+requests>=2.31.0
