@@ -18,7 +18,7 @@ def create_risk_assessment_crew(project_id: str, project_details: dict) -> Crew:
     # Task 2: Analyze external market conditions
     market_context = project_details.get('market_context', 'General Tech Market')
     task_market_analysis = Task(
-        description=f"Search for market news related to '{market_context}' and run sentiment analysis on it to determine external macroeconomic impact on the project.",
+        description=f"Use the 'Search Market News' tool with query '{market_context}' to find relevant market news. Then use the 'Analyze Sentiment' tool on the results to compute a negative sentiment score. Do NOT use any tool other than 'Search Market News' and 'Analyze Sentiment'.",
         expected_output="A negative sentiment score and a summary of external market pressures.",
         agent=market_analyst,
     )
@@ -49,7 +49,8 @@ def create_risk_assessment_crew(project_id: str, project_details: dict) -> Crew:
         agents=[status_tracker, market_analyst, risk_scorer, reporting_agent, coordinator_agent],
         tasks=[task_track_status, task_market_analysis, task_score_risk, task_generate_report],
         process=Process.sequential,
-        verbose=True
+        verbose=True,
+        max_rpm=15 # Enforce rate limit for Free-tier LLMs
     )
     
     return crew

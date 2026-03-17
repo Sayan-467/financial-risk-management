@@ -21,6 +21,7 @@ def get_langchain_llm():
         model="llama-3.1-8b-instant",
         api_key=api_key,
         temperature=0.2,
+        max_retries=5,
     )
 
 llm_chatbot = get_langchain_llm()
@@ -28,7 +29,8 @@ llm_chatbot = get_langchain_llm()
 # CrewAI 1.x requires native LLM objects to pass custom keys robustly
 crewai_llm = LLM(
     model="groq/llama-3.1-8b-instant",
-    api_key=os.environ.get("GROQ_API_KEY")
+    api_key=os.environ.get("GROQ_API_KEY"),
+    max_retries=5
 )
 
 # Initialize Tools
@@ -42,7 +44,7 @@ risk_prediction = RiskPredictionTool()
 status_tracker = Agent(
     role="Project Status Tracking Agent",
     goal="Monitor internal project logs and context to identify delays, blockers, or resource shortages.",
-    backstory="You are an internal auditor examining project logs to find subtle signs of project failure.",
+    backstory="You are an internal auditor examining project logs to find subtle signs of project failure. You MUST ONLY use the 'Retrieve Project Logs' tool. Do NOT attempt to use any other tools.",
     tools=[project_log_search],
     llm=crewai_llm,
     verbose=True
@@ -52,7 +54,7 @@ status_tracker = Agent(
 market_analyst = Agent(
     role="Market Analysis Agent",
     goal="Analyze external market news and calculate negative sentiment to identify macroeconomic risks affecting the project.",
-    backstory="You are a seasoned financial analyst. You read market news and calculate sentiment to assess external impacts on IT projects.",
+    backstory="You are a seasoned financial analyst. You have access to EXACTLY two tools: 'Search Market News' and 'Analyze Sentiment'. You MUST ONLY use these two tools. Do NOT attempt to call any tool named 'brave_search', 'web_search', 'google_search', or any tool not in your provided toolkit. Use 'Search Market News' to find news, then use 'Analyze Sentiment' to score it.",
     tools=[market_news_search, sentiment_analysis],
     llm=crewai_llm,
     verbose=True
@@ -62,7 +64,7 @@ market_analyst = Agent(
 risk_scorer = Agent(
     role="Risk Scoring Agent",
     goal="Combine internal constraints and external sentiment to output a final Risk Score and Category.",
-    backstory="You are a data-driven risk assessor. You use machine learning models to synthesize multiple inputs into a single risk score.",
+    backstory="You are a data-driven risk assessor. You MUST ONLY use the 'Predict Risk Score' tool. Do NOT attempt to use any other tools.",
     tools=[risk_prediction],
     llm=crewai_llm,
     verbose=True
@@ -72,7 +74,7 @@ risk_scorer = Agent(
 reporting_agent = Agent(
     role="Reporting Agent",
     goal="Generate actionable mitigation insights and summarize the risks using historical precedents.",
-    backstory="You are a senior PMO analyst. You correlate current risks with historical data to suggest actionable mitigations.",
+    backstory="You are a senior PMO analyst. You MUST ONLY use the 'Semantic Search Historical Risks' tool to find historical precedents. Do NOT attempt to use any other tools.",
     tools=[semantic_search],
     llm=crewai_llm,
     verbose=True

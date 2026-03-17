@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import requests
+import plotly.express as px
 import json
 import os
 
@@ -8,47 +9,199 @@ API_URL = "http://localhost:8000/api/v1"
 
 st.set_page_config(page_title="Project Risk Manager AI", layout="wide", page_icon="🛡️")
 
+# Inject Custom CSS
+css_path = os.path.join(os.path.dirname(__file__), 'style.css')
+if os.path.exists(css_path):
+    with open(css_path) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+# Inject Subtle Crosshair Cursor
+import streamlit.components.v1 as components
+components.html(
+    """
+    <script>
+        const parentDoc = window.parent.document;
+        let cursor = parentDoc.getElementById('glow-cursor');
+        // Remove old cursor elements from previous themes
+        if (cursor) cursor.remove();
+        let trail = parentDoc.getElementById('cursor-trail');
+        if (trail) trail.remove();
+
+        if (!parentDoc.getElementById('cross-cursor')) {
+            const style = parentDoc.createElement('style');
+            style.innerHTML = `
+                .cross-cursor {
+                    position: fixed;
+                    top: 0; left: 0;
+                    width: 24px; height: 24px;
+                    pointer-events: none;
+                    z-index: 9999999;
+                    transform: translate(-50%, -50%);
+                    opacity: 0.7;
+                    transition: opacity 0.2s;
+                }
+                .cross-cursor::before, .cross-cursor::after {
+                    content: '';
+                    position: absolute;
+                    background: #1e293b;
+                }
+                .cross-cursor::before {
+                    top: 0; left: 50%;
+                    width: 1.5px; height: 100%;
+                    transform: translateX(-50%);
+                }
+                .cross-cursor::after {
+                    top: 50%; left: 0;
+                    width: 100%; height: 1.5px;
+                    transform: translateY(-50%);
+                }
+                * { cursor: none !important; }
+            `;
+            parentDoc.head.appendChild(style);
+
+            const cur = parentDoc.createElement('div');
+            cur.id = 'cross-cursor';
+            cur.className = 'cross-cursor';
+            parentDoc.body.appendChild(cur);
+
+            parentDoc.addEventListener('mousemove', e => {
+                window.requestAnimationFrame(() => {
+                    cur.style.left = e.clientX + 'px';
+                    cur.style.top = e.clientY + 'px';
+                });
+            });
+        }
+    </script>
+    """,
+    height=0,
+    width=0
+)
+
 def load_local_data():
     """Load the mock JSON as the source of truth for the dashboard."""
     data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'sample_data.json')
     with open(data_path, 'r') as f:
         return json.load(f)
 
+def save_local_data(new_data):
+    """Save updated data back to the JSON file."""
+    data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'sample_data.json')
+    with open(data_path, 'w') as f:
+        json.dump(new_data, f, indent=2)
+
 data = load_local_data()
 projects = data.get("projects", [])
 
-st.title("🛡️ AI-Powered Project Risk Management System")
-st.markdown("Monitor internal project constraints and external market risks using Multi-Agent AI.")
+# --- Branded Header ---
+import base64
 
-# --- Dashboard Tab ---
-tab1, tab2, tab3 = st.tabs(["📊 Portfolio Dashboard", "🤖 CrewAI Agent Reports", "💬 Ask Risk Chatbot"])
+banner_path = os.path.join(os.path.dirname(__file__), 'assets', 'hero_banner.png')
+if os.path.exists(banner_path):
+    with open(banner_path, 'rb') as img_file:
+        banner_b64 = base64.b64encode(img_file.read()).decode()
+    st.markdown(f"""
+    <div style="text-align:center; margin-bottom: 8px;">
+        <img src="data:image/png;base64,{banner_b64}" style="width:100%; max-height:180px; object-fit:cover; border-radius: 12px; opacity:0.85;" />
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("""
+<div style="text-align:center; margin-bottom: 24px;">
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: #0f172a; margin: 0; padding: 0;">AI-Powered Project Risk Management</h1>
+    <p style="font-family: 'Inter', sans-serif; font-size: 1rem; color: #64748b !important; margin-top: 8px;">Enterprise-grade risk intelligence for portfolio decision-makers.</p>
+    <hr style="border: none; height: 1px; background: linear-gradient(90deg, transparent, #b8860b, transparent); margin: 20px auto; width: 200px;" />
+</div>
+""", unsafe_allow_html=True)
+
+# --- Dashboard Tabs ---
+tab1, tab2, tab3, tab4 = st.tabs(["Portfolio Dashboard", "Agent Reports", "Risk Assistant", "Update Data"])
 
 with tab1:
     st.header("Project Portfolio Health")
     
-    metrics_cols = st.columns(len(projects))
+    with st.expander("ℹ️ How to read this dashboard"):
+        st.markdown('''
+        * **Risk Score:** A real-time score (0-100) generated by a Machine Learning model assessing budget burn rate, schedule delays, and payment issues.
+        * **Green (Low Risk):** Project is healthy and on track.
+        * **Orange (Medium Risk):** Warning signs detected, such as minor delays or mild budget overruns.
+        * **Red (High Risk):** Project is in distress, e.g., severe payment delays or extreme resource overallocation.
+        ''')
     
-    # Calculate fast real-time risk scores via API
-    for i, proj in enumerate(projects):
-        try:
-            res = requests.post(f"{API_URL}/risk/score", json=proj).json()
-            score = res.get("score", 0)
-            category = res.get("category", "Unknown")
-            
-            color = "green" if category == "Low" else "orange" if category == "Medium" else "red"
-            
-            with metrics_cols[i]:
-                st.markdown(f"### {proj['name']}")
-                st.markdown(f"**Status:** {proj['status']}")
-                st.markdown(f"**Risk Score:** <span style='color:{color}; font-size: 24px'>{score:.1f}/100</span> ({category})", unsafe_allow_html=True)
-                st.progress(proj['completed_tasks'] / proj['total_tasks'], text="Task Completion")
-                st.caption(f"Budget Spent: ${proj['spent']} / ${proj['budget']}")
-                if int(proj['payment_delays_days']) > 0:
-                    st.error(f"⚠️ Payment delayed by {proj['payment_delays_days']} days")
-                    
-        except Exception as e:
-            with metrics_cols[i]:
-                st.error(f"API Offline. Start FastAPI server. {e}")
+    st.divider()
+
+    # --- Top Level KPIs ---
+    total_budget = sum([p["budget"] for p in projects])
+    total_spent = sum([p["spent"] for p in projects])
+    active_projects = len(projects)
+    
+    col_kpi1, col_kpi2, col_kpi3 = st.columns(3)
+    with col_kpi1:
+        st.metric("Total Active Projects", active_projects)
+    with col_kpi2:
+        st.metric("Total Portfolio Budget", f"${total_budget:,.2f}")
+    with col_kpi3:
+        st.metric("Total Spent", f"${total_spent:,.2f}", delta=f"${total_budget - total_spent:,.2f} remaining", delta_color="normal")
+        
+    st.divider()
+    
+    # --- Interactive Filtering ---
+    st.subheader("Filter Projects")
+    all_statuses = list(set([p["status"] for p in projects]))
+    selected_statuses = st.multiselect("Filter by Status", all_statuses, default=all_statuses)
+    
+    filtered_projects = [p for p in projects if p["status"] in selected_statuses]
+    
+    if not filtered_projects:
+        st.warning("No projects match the selected filters.")
+    else:
+        # --- Charts ---
+        st.subheader("Budget Burn Rate Overview")
+        df_chart = pd.DataFrame({
+            "Project": [p["name"] for p in filtered_projects],
+            "Budget": [p["budget"] for p in filtered_projects],
+            "Spent": [p["spent"] for p in filtered_projects]
+        })
+        fig = px.bar(df_chart, x="Project", y=["Budget", "Spent"], barmode="group",
+                        color_discrete_map={"Budget": "#1e293b", "Spent": "#b8860b"},
+                        title="Budget vs. Spent per Project")
+        fig.update_layout(
+            plot_bgcolor='#fafafa',
+            paper_bgcolor='#ffffff',
+            font=dict(family='Inter, sans-serif', color='#334155'),
+            title_font=dict(family='Playfair Display, serif', size=18, color='#0f172a'),
+            xaxis=dict(gridcolor='#edebe7', color='#64748b'),
+            yaxis=dict(gridcolor='#edebe7', color='#64748b'),
+            legend=dict(font=dict(color='#64748b')),
+            margin=dict(l=20, r=20, t=50, b=20)
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
+        st.divider()
+
+        st.subheader("Project Details")
+        metrics_cols = st.columns(len(filtered_projects))
+        
+        # Calculate fast real-time risk scores via API
+        for i, proj in enumerate(filtered_projects):
+            try:
+                res = requests.post(f"{API_URL}/risk/score", json=proj).json()
+                score = res.get("score", 0)
+                category = res.get("category", "Unknown")
+                
+                color = "green" if category == "Low" else "orange" if category == "Medium" else "red"
+                
+                with metrics_cols[i]:
+                    st.markdown(f"### {proj['name']}")
+                    st.markdown(f"**Status:** {proj['status']}")
+                    st.markdown(f"**Risk Score:** <span style='color:{color}; font-size: 24px'>{score:.1f}/100</span> ({category})", unsafe_allow_html=True)
+                    st.progress(proj['completed_tasks'] / proj['total_tasks'], text="Task Completion")
+                    st.caption(f"Budget Spent: ${proj['spent']} / ${proj['budget']}")
+                    if int(proj['payment_delays_days']) > 0:
+                        st.error(f"⚠️ Payment delayed by {proj['payment_delays_days']} days")
+                        
+            except Exception as e:
+                with metrics_cols[i]:
+                    st.error(f"API Offline. Start FastAPI server. {e}")
 
 with tab2:
     st.header("Generate Deep Agentic Risk Reports")
@@ -103,3 +256,44 @@ with tab3:
                 error_msg = f"Failed to connect to Chatbot API: {e}"
                 st.error(error_msg)
                 st.session_state.messages.append({"role": "assistant", "content": error_msg})
+
+with tab4:
+    st.header("Update Project Data")
+    st.markdown("Use this form to dynamically update project metrics. Changes will be saved to the database and reflected on the dashboard immediately.")
+    
+    edit_proj_name = st.selectbox("Select Project to Update", [p["name"] for p in projects])
+    edit_proj = next(p for p in projects if p["name"] == edit_proj_name)
+    
+    with st.form("update_project_form"):
+        st.subheader(f"Editing: {edit_proj['name']}")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            new_status = st.selectbox("Status", ["On Track", "In Progress", "At Risk", "Blocked", "Completed"], index=["On Track", "In Progress", "At Risk", "Blocked", "Completed"].index(edit_proj["status"]) if edit_proj["status"] in ["On Track", "In Progress", "At Risk", "Blocked", "Completed"] else 0)
+            new_spent = st.number_input("Budget Spent ($)", min_value=0, value=edit_proj["spent"])
+            new_completed = st.number_input("Completed Tasks", min_value=0, value=edit_proj["completed_tasks"])
+        with col2:
+            new_util = st.slider("Resource Utilization", 0.0, 1.5, float(edit_proj["resource_utilization"]))
+            new_delays = st.number_input("Payment Delays (Days)", min_value=0, value=int(edit_proj["payment_delays_days"]))
+            
+        submit_button = st.form_submit_button(label="Save Updates")
+        
+        if submit_button:
+            # Find and update the project in the main data dictionary
+            for p in data["projects"]:
+                if p["id"] == edit_proj["id"]:
+                    p["status"] = new_status
+                    p["spent"] = new_spent
+                    p["completed_tasks"] = new_completed
+                    p["resource_utilization"] = new_util
+                    p["payment_delays_days"] = new_delays
+                    break
+            
+            # Save the updated data
+            try:
+                save_local_data(data)
+                st.success(f"Project '{edit_proj['name']}' updated successfully!")
+                # Force a rerun to refresh the dashboard tab
+                st.rerun()
+            except Exception as e:
+                st.error(f"Failed to save data: {e}")

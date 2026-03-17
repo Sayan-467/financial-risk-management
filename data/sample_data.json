@@ -1,86 +1,101 @@
 {
   "projects": [
     {
-      "id": "PROJ-001",
-      "name": "Cloud Migration Alpha",
+      "id": "PRJ-24-001",
+      "name": "Global Payment Gateway Upgrade",
       "status": "In Progress",
-      "budget": 500000,
-      "spent": 450000,
-      "timeline_days": 180,
-      "days_elapsed": 170,
-      "completed_tasks": 85,
-      "total_tasks": 100,
-      "resource_utilization": 0.95,
-      "payment_delays_days": 15,
+      "budget": 1200000,
+      "spent": 850000,
+      "timeline_days": 240,
+      "days_elapsed": 190,
+      "completed_tasks": 160,
+      "total_tasks": 200,
+      "resource_utilization": 0.88,
+      "payment_delays_days": 5,
       "recent_logs": [
-        "Database migration stalled due to network latency.",
-        "Key developer on sick leave."
+        "Completed integration tests with European banking partners.",
+        "Waiting on compliance sign-off for new anti-fraud module.",
+        "Senior backend engineer reallocated to emergency hotfix for 2 days."
       ],
-      "market_context": "Tech sector experiencing supply chain delays for server hardware."
+      "market_context": "Upcoming changes in EU financial regulations require strict compliance audits."
     },
     {
-      "id": "PROJ-002",
-      "name": "E-Commerce Replatforming",
+      "id": "PRJ-24-002",
+      "name": "Mobile Banking App Redesign",
       "status": "On Track",
-      "budget": 200000,
-      "spent": 50000,
-      "timeline_days": 120,
-      "days_elapsed": 30,
-      "completed_tasks": 25,
-      "total_tasks": 100,
-      "resource_utilization": 0.75,
+      "budget": 850000,
+      "spent": 320000,
+      "timeline_days": 180,
+      "days_elapsed": 60,
+      "completed_tasks": 45,
+      "total_tasks": 150,
+      "resource_utilization": 0.92,
       "payment_delays_days": 0,
       "recent_logs": [
-        "Initial design phase completed ahead of schedule.",
-        "Client approved wireframes."
+        "UX design phase approved by stakeholders.",
+        "Initial flutter components merged into main branch.",
+        "Onboarding flow user testing showed 20% increase in conversion."
       ],
-      "market_context": "Retail e-commerce growing steadily."
+      "market_context": "Competitors launching aggressive new feature sets, increasing pressure for rapid delivery."
     },
     {
-      "id": "PROJ-003",
-      "name": "AI CRM Integration",
+      "id": "PRJ-24-003",
+      "name": "Legacy Mainframe Decommissioning",
       "status": "At Risk",
-      "budget": 300000,
-      "spent": 320000,
-      "timeline_days": 90,
-      "days_elapsed": 85,
-      "completed_tasks": 60,
-      "total_tasks": 100,
-      "resource_utilization": 0.99,
+      "budget": 2500000,
+      "spent": 2750000,
+      "timeline_days": 365,
+      "days_elapsed": 340,
+      "completed_tasks": 300,
+      "total_tasks": 350,
+      "resource_utilization": 1.15,
       "payment_delays_days": 45,
       "recent_logs": [
-        "API rate limits exceeded on legacy CRM.",
-        "Client dispute over scope of data migration."
+        "Uncovered undocumented dependencies in core ledger system.",
+        "Cost overrun due to extended parallel run phase.",
+        "Vendor dispute regarding offboarding SLA penalties."
       ],
-      "market_context": "Economic downturn causing clients to tighten budgets."
+      "market_context": "Shortage of COBOL developers driving up contractor rates unexpectedly."
     }
   ],
   "historical_risks": [
     {
-      "id": "RISK-101",
-      "project_type": "Data Migration",
-      "description": "Network latency caused data corruption and 2 week delay.",
-      "mitigation": "Implemented chunked uploads with checksum validation.",
+      "id": "HR-001",
+      "project_type": "Infrastructure",
+      "description": "Undocumented dependencies discovered late in the project caused a 3-month schedule overrun.",
+      "mitigation": "Conduct a comprehensive dependency mapping phase using automated discovery tools before finalizing the project timeline.",
       "severity": "High"
     },
     {
-      "id": "RISK-102",
-      "project_type": "API Integration",
-      "description": "Exceeded third-party API rate limits.",
-      "mitigation": "Implemented exponential backoff and caching layer.",
+      "id": "HR-002",
+      "project_type": "Compliance",
+      "description": "Regulatory changes midway through the project rendered current implementation obsolete.",
+      "mitigation": "Establish a continuous compliance review board that meets bi-weekly to assess regulatory horizon.",
+      "severity": "Critical"
+    },
+    {
+      "id": "HR-003",
+      "project_type": "Software Development",
+      "description": "Key personnel turnover caused loss of critical domain knowledge.",
+      "mitigation": "Implement pair programming for critical modules and mandatory bi-weekly documentation reviews.",
       "severity": "Medium"
     }
   ],
   "market_news": [
     {
-      "title": "Supply Chain Issues Impact Server Delivery",
-      "content": "Global semiconductor shortages are causing delays in physical server deployments across the tech sector.",
+      "title": "New EU Data Privacy Regulations Detailed",
+      "content": "The European Union has published the final draft of the updated data privacy regulations, stricter penalties for non-compliance on cross-border data transfers.",
       "sentiment": "Negative"
     },
     {
-      "title": "Retail Spending Up",
-      "content": "E-commerce platforms are seeing increased traffic ahead of the holiday season.",
+      "title": "Surge in Demand for Mobile Banking Apps",
+      "content": "Recent consumer reports show a 40% year-over-year increase in daily active users for mobile-first banking applications.",
       "sentiment": "Positive"
+    },
+    {
+      "title": "Tech Talent Shortage Deepens in Legacy Systems",
+      "content": "Companies are facing unprecedented difficulty finding developers with experience in older programming languages, causing delays in modernization projects.",
+      "sentiment": "Negative"
     }
   ]
 }

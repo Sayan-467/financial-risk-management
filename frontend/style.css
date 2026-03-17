@@ -1,0 +1,465 @@
+/* ============================================================
+   MERIDIAN — Enterprise Risk Intelligence Platform
+   Minimalist Design System with Regal Typography
+   ============================================================ */
+
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap');
+
+/* --- Design Tokens --- */
+:root {
+  /* Palette — Restrained & Elegant */
+  --white: #ffffff;
+  --off-white: #fafafa;
+  --ivory: #f5f3ef;
+  --pearl: #edebe7;
+  --warm-gray-100: #d4d0ca;
+  --warm-gray-200: #b0aba3;
+  --warm-gray-300: #8a837a;
+  --navy: #1e293b;
+  --navy-deep: #0f172a;
+  --charcoal: #334155;
+  --slate: #64748b;
+  --gold: #b8860b;
+  --gold-light: #d4a843;
+  --gold-muted: rgba(184, 134, 11, 0.12);
+  --crimson: #991b1b;
+  --emerald: #166534;
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  /* Radius — Understated */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadows — Subtle */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.03);
+
+  /* Transitions */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration: 0.25s;
+}
+
+/* ============================================================
+   GLOBAL
+   ============================================================ */
+
+html, body, [class*="css"] {
+  font-family: var(--font-body) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+.stApp {
+  background: var(--off-white) !important;
+  color: var(--navy) !important;
+}
+
+/* ============================================================
+   TYPOGRAPHY — Regal Serif Headings
+   ============================================================ */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display) !important;
+  color: var(--navy-deep) !important;
+  letter-spacing: -0.01em !important;
+}
+
+h1 {
+  font-size: 2.4rem !important;
+  font-weight: 700 !important;
+  color: var(--navy-deep) !important;
+  /* Reset any gradient text from previous themes */
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: var(--navy-deep) !important;
+  background-clip: unset !important;
+}
+
+h2 {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  color: var(--navy) !important;
+  border-bottom: 2px solid var(--gold) !important;
+  padding-bottom: var(--space-sm) !important;
+  display: inline-block !important;
+}
+
+h3 {
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  color: var(--charcoal) !important;
+}
+
+p, li, span {
+  color: var(--charcoal) !important;
+  font-weight: 400 !important;
+  line-height: 1.7 !important;
+}
+
+.stMarkdown p {
+  color: var(--charcoal) !important;
+}
+
+label {
+  color: var(--slate) !important;
+  font-weight: 500 !important;
+  font-size: 0.85rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+/* ============================================================
+   KPI METRIC CARDS — Clean & Elevated
+   ============================================================ */
+
+[data-testid="metric-container"] {
+  background: var(--white) !important;
+  border: 1px solid var(--pearl) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: var(--space-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+  transition: all var(--duration) var(--ease) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Gold accent bar at the top of each card */
+[data-testid="metric-container"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+}
+
+[data-testid="metric-container"]:hover {
+  box-shadow: var(--shadow-lg) !important;
+  transform: translateY(-4px) !important;
+  border-color: var(--warm-gray-100) !important;
+}
+
+[data-testid="stMetricValue"] {
+  font-family: var(--font-display) !important;
+  font-size: 2.4rem !important;
+  font-weight: 800 !important;
+  color: var(--navy-deep) !important;
+  /* Reset gradient text */
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: var(--navy-deep) !important;
+  background-clip: unset !important;
+}
+
+[data-testid="stMetricLabel"] {
+  font-family: var(--font-body) !important;
+  font-size: 0.8rem !important;
+  color: var(--slate) !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+}
+
+[data-testid="stMetricDelta"] {
+  font-weight: 500 !important;
+  font-size: 0.85rem !important;
+}
+
+/* ============================================================
+   BUTTONS — Understated Elegance
+   ============================================================ */
+
+.stButton > button {
+  background: var(--navy) !important;
+  color: var(--white) !important;
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  padding: 0.65rem 1.8rem !important;
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.03em !important;
+  transition: all var(--duration) var(--ease) !important;
+  box-shadow: none !important;
+}
+
+.stButton > button:hover {
+  background: var(--navy-deep) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.stButton > button:active {
+  transform: translateY(0) !important;
+}
+
+/* Form submit button — gold accent */
+.stFormSubmitButton > button {
+  background: var(--gold) !important;
+  color: var(--white) !important;
+}
+
+.stFormSubmitButton > button:hover {
+  background: var(--gold-light) !important;
+}
+
+/* ============================================================
+   TABS — Clean Underline Style
+   ============================================================ */
+
+.stTabs [data-baseweb="tab-list"] {
+  gap: 0 !important;
+  background: transparent !important;
+  border-bottom: 1px solid var(--pearl) !important;
+  padding: 0 !important;
+}
+
+.stTabs [data-baseweb="tab"] {
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 14px 24px !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  color: var(--slate) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  transition: all var(--duration) var(--ease) !important;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+  color: var(--navy) !important;
+  background: var(--gold-muted) !important;
+}
+
+.stTabs [aria-selected="true"] {
+  color: var(--navy-deep) !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid var(--gold) !important;
+  background: transparent !important;
+}
+
+.stTabs [data-baseweb="tab-highlight"] {
+  background: var(--gold) !important;
+}
+
+.stTabs [data-baseweb="tab-border"] {
+  background: var(--pearl) !important;
+}
+
+/* ============================================================
+   EXPANDER
+   ============================================================ */
+
+[data-testid="stExpander"] {
+  background: var(--white) !important;
+  border: 1px solid var(--pearl) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-sm) !important;
+  overflow: hidden !important;
+}
+
+[data-testid="stExpander"] summary {
+  color: var(--navy) !important;
+  font-weight: 600 !important;
+  font-family: var(--font-body) !important;
+}
+
+[data-testid="stExpander"] .stMarkdown p {
+  color: var(--charcoal) !important;
+}
+
+/* ============================================================
+   INPUT FIELDS
+   ============================================================ */
+
+[data-baseweb="input"],
+[data-baseweb="select"],
+[data-baseweb="base-input"],
+[data-baseweb="textarea"] {
+  background-color: var(--white) !important;
+  border-radius: var(--radius-md) !important;
+  border: 1px solid var(--warm-gray-100) !important;
+  color: var(--navy) !important;
+  font-family: var(--font-body) !important;
+  transition: all var(--duration) var(--ease) !important;
+}
+
+[data-baseweb="input"]:focus-within,
+[data-baseweb="select"]:focus-within {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 3px var(--gold-muted) !important;
+}
+
+[data-baseweb="input"] input,
+[data-baseweb="select"] div {
+  color: var(--navy) !important;
+}
+
+/* Multiselect tags */
+[data-baseweb="tag"] {
+  background: var(--ivory) !important;
+  border: 1px solid var(--warm-gray-100) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--navy) !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================================
+   CHAT
+   ============================================================ */
+
+[data-testid="stChatMessage"] {
+  background: var(--white) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: var(--space-md) var(--space-lg) !important;
+  margin-bottom: var(--space-md) !important;
+  border: 1px solid var(--pearl) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+[data-testid="stChatMessage"] p {
+  color: var(--charcoal) !important;
+}
+
+[data-testid="stChatInputContainer"] {
+  border: 1px solid var(--warm-gray-100) !important;
+  background: var(--white) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+/* ============================================================
+   PLOTLY CHART
+   ============================================================ */
+
+[data-testid="stPlotlyChart"] {
+  background: var(--white) !important;
+  border: 1px solid var(--pearl) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: var(--space-md) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+
+.stProgress > div > div {
+  background: var(--pearl) !important;
+  border-radius: 4px !important;
+}
+
+.stProgress > div > div > div {
+  background: linear-gradient(90deg, var(--navy), var(--gold)) !important;
+  border-radius: 4px !important;
+}
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+
+hr {
+  border: none !important;
+  height: 1px !important;
+  background: var(--pearl) !important;
+  margin: var(--space-xl) 0 !important;
+}
+
+/* ============================================================
+   ALERTS
+   ============================================================ */
+
+[data-testid="stAlert"] {
+  border-radius: var(--radius-md) !important;
+  border-left: 4px solid !important;
+  font-family: var(--font-body) !important;
+}
+
+/* ============================================================
+   FORM
+   ============================================================ */
+
+[data-testid="stForm"] {
+  background: var(--white) !important;
+  border: 1px solid var(--pearl) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: var(--space-xl) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+/* ============================================================
+   SLIDER
+   ============================================================ */
+
+[data-baseweb="slider"] [role="slider"] {
+  background: var(--gold) !important;
+  border: 2px solid var(--gold-light) !important;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--off-white);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--warm-gray-100);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--warm-gray-200);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+[data-testid="column"] {
+  animation: fadeIn 0.5s var(--ease) both !important;
+}
+[data-testid="column"]:nth-child(1) { animation-delay: 0s !important; }
+[data-testid="column"]:nth-child(2) { animation-delay: 0.08s !important; }
+[data-testid="column"]:nth-child(3) { animation-delay: 0.16s !important; }
+
+/* Caption */
+.stCaption, [data-testid="stCaptionContainer"] {
+  color: var(--warm-gray-300) !important;
+  font-size: 0.82rem !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 768px) {
+  h1 { font-size: 1.8rem !important; }
+  [data-testid="stMetricValue"] { font-size: 1.6rem !important; }
+  .stTabs [data-baseweb="tab"] { padding: 10px 14px !important; font-size: 0.82rem !important; }
+}
