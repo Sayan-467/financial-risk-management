@@ -42,7 +42,7 @@ class MarketNewsSearchInput(BaseModel):
     query: str = Field(..., description="The market topic or project context to search news for.")
 
 class MarketNewsSearchTool(BaseTool):
-    name: str = "Search Market News"
+    name: str = "search_market_news"
     description: str = "Retrieves recent market news from the vector database based on context."
     args_schema: Type[BaseModel] = MarketNewsSearchInput
 

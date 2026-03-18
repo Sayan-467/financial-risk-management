@@ -38,8 +38,8 @@ def create_risk_assessment_crew(project_id: str, project_details: dict) -> Crew:
     
     # Task 4: Generate Report and Mitigations
     task_generate_report = Task(
-        description=f"Search historical risks that match the issues found in project '{project_id}'. Provide a final executive summary including the computed risk score, category, the internal and external factors, and suggested mitigations based on history.",
-        expected_output="A comprehensive Markdown report detailing the risk profile and action plan for the project.",
+        description=f"Use only the 'Semantic Search Historical Risks' tool to find historical precedents that match the issues found in project '{project_id}'. Do NOT attempt to use any other tools. Provide a final executive summary including the computed risk score, category, the internal and external factors, and suggested mitigations based on history.",
+        expected_output="A comprehensive Markdown report detailing the risk profile and action plan for the project. Do not call any tool except 'Semantic Search Historical Risks'.",
         agent=reporting_agent,
         context=[task_track_status, task_market_analysis, task_score_risk]
     )

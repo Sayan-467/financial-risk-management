@@ -85,7 +85,10 @@ async def generate_agent_report(project: Project):
         result = crew.kickoff()
         # CrewAI 1.x returns a CrewOutput object. The markdown text is available in .raw
         report_text = result.raw if hasattr(result, 'raw') else str(result)
-        return {"status": "success", "message": "Report generated successfully.", "report": report_text}
+        # Remove tool call tags like <brunswick_market_research>...</brunswick_market_research>
+        import re
+        cleaned_report = re.sub(r'<[^>]+>', '', report_text)
+        return {"status": "success", "message": "Report generated successfully.", "report": cleaned_report.strip()}
     except Exception as e:
         import traceback
         traceback.print_exc()
