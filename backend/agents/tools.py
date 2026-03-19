@@ -14,7 +14,7 @@ class SemanticSearchInput(BaseModel):
     query: str = Field(..., description="The query to search the vector database for historical risks.")
 
 class SemanticSearchTool(BaseTool):
-    name: str = "Semantic Search Historical Risks"
+    name: str = "search_historical_risks"
     description: str = "Searches the vector database for historical project risks and their mitigations."
     args_schema: Type[BaseModel] = SemanticSearchInput
 
@@ -22,13 +22,14 @@ class SemanticSearchTool(BaseTool):
         results = db.search_similar_risks(query)
         if not results['documents'][0]:
             return "No relevant historical risks found."
-        return json.dumps(results['documents'][0])
+        text = json.dumps(results['documents'][0])
+        return text[:400] + "..." if len(text) > 400 else text
 
 class ProjectLogSearchInput(BaseModel):
     project_id: str = Field(..., description="The ID of the project to retrieve logs for.")
 
 class ProjectLogSearchTool(BaseTool):
-    name: str = "Retrieve Project Logs"
+    name: str = "retrieve_project_logs"
     description: str = "Retrieves recent logs and context for a specific project from the database."
     args_schema: Type[BaseModel] = ProjectLogSearchInput
 
@@ -36,7 +37,8 @@ class ProjectLogSearchTool(BaseTool):
         results = db.get_project_context(project_id)
         if not results['documents']:
             return f"No logs found for project {project_id}."
-        return "\n".join(results['documents'])
+        text = "\n".join(results['documents'])
+        return text[:400] + "..." if len(text) > 400 else text
 
 class MarketNewsSearchInput(BaseModel):
     query: str = Field(..., description="The market topic or project context to search news for.")
@@ -50,13 +52,14 @@ class MarketNewsSearchTool(BaseTool):
         results = db.search_market_news(query)
         if not results['documents'][0]:
             return "No relevant market news found."
-        return json.dumps(results['documents'][0])
+        text = json.dumps(results['documents'][0])
+        return text[:400] + "..." if len(text) > 400 else text
 
 class SentimentAnalysisInput(BaseModel):
     text: str = Field(..., description="The text to analyze for sentiment.")
 
 class SentimentAnalysisTool(BaseTool):
-    name: str = "Analyze Sentiment"
+    name: str = "analyze_sentiment"
     description: str = "Analyzes the text and returns a negative sentiment score between 0 and 1."
     args_schema: Type[BaseModel] = SentimentAnalysisInput
 
@@ -72,7 +75,7 @@ class RiskPredictionInput(BaseModel):
     negative_sentiment: float = Field(..., description="Negative sentiment score of market/logs (0-1).")
 
 class RiskPredictionTool(BaseTool):
-    name: str = "Predict Risk Score"
+    name: str = "predict_risk_score"
     description: str = "Uses an ML model to predict a risk score (0-100) based on project metrics."
     args_schema: Type[BaseModel] = RiskPredictionInput
 

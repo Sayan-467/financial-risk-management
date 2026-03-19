@@ -22,6 +22,7 @@ def get_langchain_llm():
         api_key=api_key,
         temperature=0.2,
         max_retries=5,
+        max_tokens=600,
     )
 
 llm_chatbot = get_langchain_llm()
@@ -30,7 +31,8 @@ llm_chatbot = get_langchain_llm()
 crewai_llm = LLM(
     model="groq/llama-3.1-8b-instant",
     api_key=os.environ.get("GROQ_API_KEY"),
-    max_retries=5
+    max_retries=5,
+    max_tokens=1024,
 )
 
 # Initialize Tools
@@ -43,9 +45,9 @@ risk_prediction = RiskPredictionTool()
 # Agent 1: Project Status Tracking Agent
 status_tracker = Agent(
     role="Project Status Tracking Agent",
-    goal="Monitor internal project logs and context to identify delays, blockers, or resource shortages.",
-    backstory="You are an internal auditor examining project logs to find subtle signs of project failure. You MUST ONLY use the 'Retrieve Project Logs' tool. Do NOT attempt to use any other tools.",
-    tools=[project_log_search],
+    goal="Analyze project details provided in the task description to identify delays, blockers, or resource shortages.",
+    backstory="You are an internal auditor examining project metrics and context to find subtle signs of project failure. Analyze the information given to you directly in the task — you do NOT need to call any tools. Simply produce a structured risk summary from the provided project details.",
+    tools=[],
     llm=crewai_llm,
     verbose=True
 )
@@ -53,8 +55,13 @@ status_tracker = Agent(
 # Agent 2: Market Analysis Agent
 market_analyst = Agent(
     role="Market Analysis Agent",
-    goal="Analyze external market news and calculate negative sentiment to identify macroeconomic risks affecting the project.",
-    backstory="You are a seasoned financial analyst. You have access to EXACTLY two tools: 'Search Market News' and 'Analyze Sentiment'. You MUST ONLY use these two tools. Do NOT attempt to call any tool named 'brave_search', 'web_search', 'google_search', or any tool not in your provided toolkit. Use 'Search Market News' to find news, then use 'Analyze Sentiment' to score it.",
+    goal="Use exactly two tools in sequence: first 'search_market_news', then 'analyze_sentiment'. Then immediately write your final answer. Do not call any other tools.",
+    backstory=(
+        "You are a financial analyst. You have access to EXACTLY two tools: 'search_market_news' and 'analyze_sentiment'. "
+        "Your workflow is strict: Step 1 — call 'search_market_news' once. Step 2 — call 'analyze_sentiment' once on the results. Step 3 — write your final answer immediately. "
+        "You MUST STOP after step 3. You are STRICTLY FORBIDDEN from calling ANY other tool including 'brave_search', 'web_search', 'google_search', 'duckduckgo_search', or any tool not explicitly listed above. "
+        "If you feel the urge to do more research, resist it and write your final answer with what you have."
+    ),
     tools=[market_news_search, sentiment_analysis],
     llm=crewai_llm,
     verbose=True
@@ -64,7 +71,7 @@ market_analyst = Agent(
 risk_scorer = Agent(
     role="Risk Scoring Agent",
     goal="Combine internal constraints and external sentiment to output a final Risk Score and Category.",
-    backstory="You are a data-driven risk assessor. You MUST ONLY use the 'Predict Risk Score' tool. Do NOT attempt to use any other tools.",
+    backstory="You are a data-driven risk assessor. You MUST ONLY use the 'predict_risk_score' tool. Do NOT attempt to use any other tools.",
     tools=[risk_prediction],
     llm=crewai_llm,
     verbose=True
@@ -74,7 +81,7 @@ risk_scorer = Agent(
 reporting_agent = Agent(
     role="Reporting Agent",
     goal="Generate actionable mitigation insights and summarize the risks using historical precedents.",
-    backstory="You are a senior PMO analyst. You MUST ONLY use the 'Semantic Search Historical Risks' tool to find historical precedents. Do NOT attempt to use any other tools.",
+    backstory="You are a senior PMO analyst. You MUST ONLY use the 'search_historical_risks' tool to find historical precedents. Do NOT attempt to use any other tools.",
     tools=[semantic_search],
     llm=crewai_llm,
     verbose=True
