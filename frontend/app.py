@@ -5,7 +5,7 @@ import plotly.express as px
 import json
 import os
 
-API_URL = "http://localhost:8000/api/v1"
+API_URL = os.environ.get("API_URL", "http://localhost:8000/api/v1")
 
 st.set_page_config(page_title="Project Risk Manager AI", layout="wide", page_icon="🛡️")
 
