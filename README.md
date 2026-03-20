@@ -9,6 +9,24 @@ A complete end-to-end production-ready system that continuously identifies, asse
 - **ChromaDB**: Semantic search for historical risk mapping.
 - **Local AI/ML**: Local scikit-learn models for predicting risk scores, and HuggingFace pipelines for NLP sentiment analysis.
 
+## System Architecture
+
+The AI-Powered Project Risk Management system employs a modular, microservice-like structure:
+
+1. **Frontend (Streamlit)**
+   - **Portfolio Dashboard**: High-level view of all projects with real-time ML-predicted risk scores and an interactive budget-vs-spent chart.
+   - **Agent Reports**: Allows users to input project metrics. The ML pipeline categorizes the risk automatically, and the CrewAI agent orchestrates a full risk mitigation report.
+   - **Risk Assistant**: A conversational interface enabling users to query historical risks and project data.
+2. **Backend (FastAPI)**
+   - Serves as the central API gateway managing risk calculations, ML inferences, and data processing.
+   - Houses the Pydantic models/schemas enforcing strict data validation.
+3. **AI & ML Layer**
+   - **CrewAI**: Orchestrates multi-agent workflows (Risk Analyst, Technical Auditor, Financial Advisor, etc.) to perform deep-dive risk analysis on selected projects.
+   - **Machine Learning**: Uses a local model to predict instant project status ("On Track", "In Progress", "At Risk") and calculates real-time risk scores (0-100).
+4. **Data Layer (ChromaDB & JSON)**
+   - Uses ChromaDB to provide semantic search over historical project risks and market context.
+   - Persists real-time project metrics dynamically into a local datastore (`sample_data.json`).
+
 ## Folder Structure
 ```
 ai-project-risk-manager/
@@ -66,3 +84,9 @@ ai-project-risk-manager/
 ### Cloud Deployment
 - **AWS**: Deploy the FastAPI backend on AWS App Runner or ECS. Deploy the Streamlit app on EC2 or Streamlit Community Cloud. Use managed PostgreSQL/Pinecone if migrating from local ChromaDB.
 - **GCP**: Use Google Cloud Run for both FastAPI and Streamlit containers.
+
+## Recent Updates
+- **Automated Risk Categorization**: The manual "Project Status" dropdown was removed. The application now relies entirely on the built-in Machine Learning prediction module to intelligently classify incoming projects.
+- **Real-Time Dashboard Integration**: The Agent Reports are fully hooked into the rest of the application. Projects run through the AI analysis now instantly reflect on the `Portfolio Dashboard` graph. Furthermore, generated markdown reports are pinned and visible directly inside the dashboard's "Project Details" expander.
+- **Frontend UI Polish**: Corrected CSS regressions (like dark mode styling bugs causing invisible text) and improved contrast ratios in the custom navigation menus and dropdowns.
+- **Missing Module Bugfixes**: Safely initialized `models/schemas.py` in the backend so Pydantic classes load perfectly via uvicorn.
