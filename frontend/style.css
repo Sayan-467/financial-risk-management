@@ -307,7 +307,8 @@ label {
 }
 
 [data-baseweb="input"] input,
-[data-baseweb="select"] div {
+[data-baseweb="select"] div,
+[data-baseweb="textarea"] textarea {
   color: var(--navy) !important;
 }
 
@@ -318,6 +319,34 @@ label {
   border-radius: var(--radius-sm) !important;
   color: var(--navy) !important;
   font-weight: 500 !important;
+}
+
+/* Select Box Core & Dropdown Container */
+.stSelectbox div[data-baseweb="select"] > div {
+  background-color: var(--white) !important;
+  color: var(--charcoal) !important;
+}
+
+[data-baseweb="popover"] > div,
+[data-baseweb="menu"], 
+[data-baseweb="menu"] ul, 
+div[role="listbox"] {
+  background-color: var(--white) !important;
+}
+
+/* Dropdown Menu Items (Project Status etc.) */
+[data-baseweb="menu"] li,
+div[role="listbox"] ul li,
+[data-testid="stVirtualDropdown"] li {
+  color: var(--charcoal) !important;
+  background-color: transparent !important;
+}
+
+[data-baseweb="menu"] li:hover,
+div[role="listbox"] ul li:hover,
+[data-testid="stVirtualDropdown"] li:hover {
+  color: var(--navy-deep) !important;
+  background-color: var(--pearl) !important;
 }
 
 /* ============================================================

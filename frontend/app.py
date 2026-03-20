@@ -198,6 +198,10 @@ with tab1:
                     st.caption(f"Budget Spent: ${proj['spent']} / ${proj['budget']}")
                     if int(proj['payment_delays_days']) > 0:
                         st.error(f"⚠️ Payment delayed by {proj['payment_delays_days']} days")
+                    
+                    if "latest_report" in proj and proj["latest_report"]:
+                        with st.expander("📄 View AI Agent Report"):
+                            st.markdown(proj["latest_report"])
                         
             except Exception as e:
                 with metrics_cols[i]:
@@ -223,7 +227,6 @@ with tab2:
             rt_name = st.text_input("Project Name *", placeholder="e.g. Cloud ERP Migration")
             rt_tech = st.text_input("Tech Stack", placeholder="e.g. AWS, Kubernetes, Python, PostgreSQL")
         with col_b:
-            rt_status = st.selectbox("Project Status", ["In Progress", "On Track", "At Risk", "Blocked", "Completed"])
             rt_employees = st.number_input("Number of Employees / Team Size", min_value=1, max_value=10000, value=10, step=1)
 
         rt_description = st.text_area(
@@ -286,7 +289,7 @@ with tab2:
                 "description": rt_description.strip(),
                 "tech_stack": rt_tech.strip() or "Not specified",
                 "employees": int(rt_employees),
-                "status": rt_status,
+                "status": "Awaiting Prediction",
                 "budget": float(rt_budget),
                 "spent": float(rt_spent),
                 "payment_delays_days": int(rt_delay),
@@ -306,6 +309,15 @@ with tab2:
                 ml_score = ml_res.get("score", 0)
                 ml_cat = ml_res.get("category", "Unknown")
                 color = "#22c55e" if ml_cat == "Low" else "#f97316" if ml_cat == "Medium" else "#ef4444"
+                
+                # Predict and set the formal Status based on AI Risk category
+                if ml_cat == "Low":
+                    project_payload["status"] = "On Track"
+                elif ml_cat == "High":
+                    project_payload["status"] = "At Risk"
+                else:
+                    project_payload["status"] = "In Progress"
+                    
                 budget_pct = (rt_spent / rt_budget * 100) if rt_budget > 0 else 0
                 task_pct = (rt_comp_tasks / rt_total_tasks * 100) if rt_total_tasks > 0 else 0
                 
@@ -338,11 +350,17 @@ with tab2:
                     ).json()
 
                     if res.get("status") == "success":
-                        st.success("✅ Analysis complete!")
-                        st.markdown(res.get("report", "No report content returned."))
+                        report_md = res.get("report", "")
+                        
+                        # Save the new project and report back to local data
+                        project_payload["latest_report"] = report_md
+                        data["projects"].append(project_payload)
+                        save_local_data(data)
+                        
+                        st.success("✅ Analysis complete & project saved to Portfolio Dashboard!")
+                        st.markdown(report_md)
                         
                         # Download button for the report
-                        report_md = res.get("report", "")
                         st.download_button(
                             label="⬇️ Download Report as Markdown",
                             data=report_md,
