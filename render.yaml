@@ -1,0 +1,29 @@
+services:
+  # -------------------------
+  # BACKEND SERVICE
+  # -------------------------
+  - type: web
+    name: project-risk-backend
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: GEMINI_API_KEY
+        sync: false
+
+  # -------------------------
+  # FRONTEND SERVICE
+  # -------------------------
+  - type: web
+    name: project-risk-frontend
+    env: python
+    buildCommand: "pip install -r frontend/requirements.txt"
+    startCommand: "cd frontend && python -m streamlit run app.py --server.port $PORT --server.address 0.0.0.0"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: API_URL
+        sync: false
+
