@@ -50,7 +50,7 @@ chroma_db/
 *.joblib
 *.h5
 *.onnx
-models/
+
 
 # Streamlit
 .streamlit/secrets.toml
